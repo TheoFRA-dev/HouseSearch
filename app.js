@@ -1,147 +1,182 @@
+// Données simples avec départements
 const listings = [
-  {
-    title: 'Maison familiale lumineuse à Lyon',
-    price: 385000,
-    city: 'Lyon',
-    bedrooms: 4,
-    surface: 120,
-    type: 'Maison',
-    source: 'SeLoger',
-    image: 'https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?auto=format&fit=crop&w=900&q=80',
-    blurb: 'Grand jardin, 2 salles de bain et école à 10 minutes.'
-  },
-  {
-    title: 'Appartement moderne en centre-ville',
-    price: 265000,
-    city: 'Lyon',
-    bedrooms: 3,
-    surface: 82,
-    type: 'Appartement',
-    source: 'LeBonCoin',
-    image: 'https://images.unsplash.com/photo-1494526585095-c41746248156?auto=format&fit=crop&w=900&q=80',
-    blurb: 'Cuisine équipée, balcon, proche transports et commerces.'
-  },
-  {
-    title: 'Villa avec piscine à Bordeaux',
-    price: 520000,
-    city: 'Bordeaux',
-    bedrooms: 5,
-    surface: 180,
-    type: 'Villa',
-    source: 'Bien’ici',
-    image: 'https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&w=900&q=80',
-    blurb: 'Espaces de vie ouverts, piscine, très belle vue sur le quartier.'
-  },
-  {
-    title: 'Maison contemporaine à Nantes',
-    price: 310000,
-    city: 'Nantes',
-    bedrooms: 4,
-    surface: 102,
-    type: 'Maison',
-    source: 'Logic-Immo',
-    image: 'https://images.unsplash.com/photo-1448630360428-65456885c650?auto=format&fit=crop&w=900&q=80',
-    blurb: 'Très bon rendement locatif et proche de la zone commerciale.'
-  },
-  {
-    title: 'Appartement lumineux à Marseille',
-    price: 242000,
-    city: 'Marseille',
-    bedrooms: 2,
-    surface: 68,
-    type: 'Appartement',
-    source: 'SeLoger',
-    image: 'https://images.unsplash.com/photo-1460317442991-0ec209397118?auto=format&fit=crop&w=900&q=80',
-    blurb: 'Vue mer, parking et ascenseur, proche du centre.'
-  },
-  {
-    title: 'Maison traditionnelle à Toulouse',
-    price: 348000,
-    city: 'Toulouse',
-    bedrooms: 3,
-    surface: 96,
-    type: 'Maison',
-    source: 'LeBonCoin',
-    image: 'https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?auto=format&fit=crop&w=900&q=80',
-    blurb: 'Jardin, garage et ambiance familiale dans un quartier calme.'
-  }
+  { title: 'Maison à Lyon', price: 385000, dept: '69', city: 'Lyon', coords: { lat: 45.76, lng: 4.84 }, bedrooms: 4, surface: 120 },
+  { title: 'Appartement à Paris', price: 565000, dept: '75', city: 'Paris', coords: { lat: 48.86, lng: 2.35 }, bedrooms: 3, surface: 82 },
+  { title: 'Villa à Bordeaux', price: 520000, dept: '33', city: 'Bordeaux', coords: { lat: 44.84, lng: -0.58 }, bedrooms: 5, surface: 180 },
+  { title: 'Maison à Nantes', price: 310000, dept: '44', city: 'Nantes', coords: { lat: 47.22, lng: -1.55 }, bedrooms: 4, surface: 102 },
+  { title: 'Appartement à Marseille', price: 242000, dept: '13', city: 'Marseille', coords: { lat: 43.30, lng: 5.37 }, bedrooms: 2, surface: 68 },
+  { title: 'Maison à Toulouse', price: 348000, dept: '31', city: 'Toulouse', coords: { lat: 43.60, lng: 1.44 }, bedrooms: 3, surface: 96 },
+  { title: 'Maison à Nice', price: 450000, dept: '06', city: 'Nice', coords: { lat: 43.70, lng: 7.26 }, bedrooms: 3, surface: 110 },
+  { title: 'Appartement à Lyon (Presqu\'île)', price: 295000, dept: '69', city: 'Lyon', coords: { lat: 45.76, lng: 4.84 }, bedrooms: 2, surface: 75 },
 ];
 
-const form = document.getElementById('searchForm');
-const resultsGrid = document.getElementById('resultsGrid');
-const resultCount = document.getElementById('resultCount');
-const resultTitle = document.getElementById('resultTitle');
-const resetBtn = document.getElementById('resetBtn');
+// Départements disponibles
+const departments = [
+  { code: '75', name: 'Paris (75)' },
+  { code: '69', name: 'Rhône (69)' },
+  { code: '13', name: 'Bouches-du-Rhône (13)' },
+  { code: '31', name: 'Haute-Garonne (31)' },
+  { code: '33', name: 'Gironde (33)' },
+  { code: '44', name: 'Loire-Atlantique (44)' },
+  { code: '06', name: 'Alpes-Maritimes (06)' },
+];
 
-function formatPrice(value) {
-  return new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'EUR', maximumFractionDigits: 0 }).format(value);
+// Coordonnées approximatives pour localisation
+const cityCoords = {
+  'Paris': { lat: 48.86, lng: 2.35 },
+  'Lyon': { lat: 45.76, lng: 4.84 },
+  'Marseille': { lat: 43.30, lng: 5.37 },
+  'Toulouse': { lat: 43.60, lng: 1.44 },
+  'Nice': { lat: 43.70, lng: 7.26 },
+  'Bordeaux': { lat: 44.84, lng: -0.58 },
+  'Nantes': { lat: 47.22, lng: -1.55 },
+};
+
+const ITEMS_PER_PAGE = 9;
+let currentPage = 1;
+let filteredResults = [];
+
+// Distance calculée en km
+function calculateDistance(lat1, lng1, lat2, lng2) {
+  const R = 6371;
+  const dLat = (lat2 - lat1) * Math.PI / 180;
+  const dLng = (lng2 - lng1) * Math.PI / 180;
+  const a = Math.sin(dLat/2) * Math.sin(dLat/2) + Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) * Math.sin(dLng/2) * Math.sin(dLng/2);
+  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+  return R * c;
 }
 
-function renderListings(items) {
-  resultsGrid.innerHTML = '';
-  resultCount.textContent = `${items.length} bien(s) correspondant`;
-  resultTitle.textContent = items.length ? 'Résultats de recherche' : 'Aucun résultat ne correspond à vos critères';
+// Initialiser les checkboxes des départements
+function initDepartments() {
+  const container = document.getElementById('departmentsList');
+  departments.forEach(dept => {
+    const div = document.createElement('div');
+    div.className = 'checkbox-item';
+    div.innerHTML = `
+      <input type="checkbox" name="dept" value="${dept.code}" id="dept-${dept.code}" />
+      <label for="dept-${dept.code}">${dept.name}</label>
+    `;
+    container.appendChild(div);
+  });
+}
 
-  if (!items.length) {
-    resultsGrid.innerHTML = '<div class="empty-state">Aucune maison ne correspond à vos critères. Essayez d’élargir vos filtres.</div>';
+// Filtrer les résultats
+function filterListings() {
+  const selectedDepts = Array.from(document.querySelectorAll('input[name="dept"]:checked')).map(e => e.value);
+  const minPrice = parseInt(document.getElementById('minPrice').value) || 0;
+  const maxPrice = parseInt(document.getElementById('maxPrice').value) || Infinity;
+  const location = document.getElementById('location').value.trim();
+
+  filteredResults = listings.filter(item => {
+    const matchDept = selectedDepts.length === 0 || selectedDepts.includes(item.dept);
+    const matchPrice = item.price >= minPrice && item.price <= maxPrice;
+    
+    let matchLocation = true;
+    if (location) {
+      const refCoords = cityCoords[location] || null;
+      if (refCoords) {
+        const dist = calculateDistance(refCoords.lat, refCoords.lng, item.coords.lat, item.coords.lng);
+        matchLocation = dist <= 100; // Dans un rayon de 100km
+      } else {
+        matchLocation = item.city.toLowerCase().includes(location.toLowerCase());
+      }
+    }
+
+    return matchDept && matchPrice && matchLocation;
+  });
+
+  currentPage = 1;
+  displayResults();
+}
+
+// Afficher les résultats avec pagination
+function displayResults() {
+  const grid = document.getElementById('resultsGrid');
+  const countEl = document.getElementById('resultCount');
+  const titleEl = document.getElementById('resultTitle');
+
+  countEl.textContent = `${filteredResults.length} bien(s) trouvé(s)`;
+  titleEl.textContent = filteredResults.length > 0 ? 'Résultats' : 'Aucun résultat';
+
+  if (filteredResults.length === 0) {
+    grid.innerHTML = '<div class="empty-state"><p>Aucun bien ne correspond à vos critères.</p></div>';
+    document.getElementById('pagination').innerHTML = '';
     return;
   }
 
-  items.forEach((item) => {
-    const card = document.createElement('article');
-    card.className = 'listing-card';
-    card.innerHTML = `
-      <div class="thumb" style="background-image:url('${item.image}')"></div>
-      <div class="listing-body">
-        <strong>${item.title}</strong>
-        <span class="price-tag">${formatPrice(item.price)}</span>
-        <div class="badges">
-          <span>${item.city}</span>
-          <span>${item.bedrooms} chambres</span>
-          <span>${item.surface} m²</span>
-          <span>${item.type}</span>
+  const startIdx = (currentPage - 1) * ITEMS_PER_PAGE;
+  const endIdx = startIdx + ITEMS_PER_PAGE;
+  const pageItems = filteredResults.slice(startIdx, endIdx);
+
+  grid.innerHTML = pageItems.map(item => `
+    <div class="card-property">
+      <div class="card-image">🏠</div>
+      <div class="card-body">
+        <div class="card-title">${item.title}</div>
+        <div class="card-price">${item.price.toLocaleString('fr-FR')} €</div>
+        <div class="card-tags">
+          <span class="tag">${item.bedrooms} ch.</span>
+          <span class="tag">${item.surface} m²</span>
+          <span class="tag">Dept ${item.dept}</span>
         </div>
-        <p class="small-note">${item.blurb}</p>
-        <span class="source-chip">📍 ${item.source}</span>
+        <div class="card-location">${item.city}</div>
       </div>
-    `;
-    resultsGrid.appendChild(card);
-  });
+    </div>
+  `).join('');
+
+  renderPagination();
 }
 
-function filterListings(formData) {
-  const city = formData.get('city')?.trim().toLowerCase() || '';
-  const maxBudget = Number(formData.get('maxBudget')) || Infinity;
-  const minBedrooms = Number(formData.get('minBedrooms')) || 0;
-  const minSurface = Number(formData.get('minSurface')) || 0;
-  const propertyType = formData.get('propertyType') || 'all';
-  const sourceFilter = formData.get('sourceFilter') || 'all';
+// Pagination
+function renderPagination() {
+  const totalPages = Math.ceil(filteredResults.length / ITEMS_PER_PAGE);
+  const paginationEl = document.getElementById('pagination');
 
-  return listings.filter((item) => {
-    const matchesCity = !city || item.city.toLowerCase().includes(city);
-    const matchesBudget = item.price <= maxBudget;
-    const matchesBedrooms = item.bedrooms >= minBedrooms;
-    const matchesSurface = item.surface >= minSurface;
-    const matchesType = propertyType === 'all' || item.type === propertyType;
-    const matchesSource = sourceFilter === 'all' || item.source === sourceFilter;
+  if (totalPages <= 1) {
+    paginationEl.innerHTML = '';
+    return;
+  }
 
-    return matchesCity && matchesBudget && matchesBedrooms && matchesSurface && matchesType && matchesSource;
-  });
+  let html = '';
+  if (currentPage > 1) {
+    html += `<button onclick="goToPage(${currentPage - 1})">← Précédent</button>`;
+  }
+
+  for (let i = 1; i <= totalPages; i++) {
+    if (i === currentPage) {
+      html += `<button class="active">${i}</button>`;
+    } else {
+      html += `<button onclick="goToPage(${i})">${i}</button>`;
+    }
+  }
+
+  if (currentPage < totalPages) {
+    html += `<button onclick="goToPage(${currentPage + 1})">Suivant →</button>`;
+  }
+
+  paginationEl.innerHTML = html;
 }
 
-form.addEventListener('submit', (event) => {
-  event.preventDefault();
-  const formData = new FormData(form);
-  const filtered = filterListings(formData);
-  renderListings(filtered);
+function goToPage(page) {
+  currentPage = page;
+  displayResults();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+// Événements
+document.getElementById('searchForm').addEventListener('submit', (e) => {
+  e.preventDefault();
+  filterListings();
 });
 
-resetBtn.addEventListener('click', () => {
-  form.reset();
-  document.getElementById('minBedrooms').value = '2';
-  document.getElementById('propertyType').value = 'all';
-  document.getElementById('sourceFilter').value = 'all';
-  renderListings(listings);
+document.getElementById('resetBtn').addEventListener('click', () => {
+  document.getElementById('searchForm').reset();
+  Array.from(document.querySelectorAll('input[name="dept"]')).forEach(e => e.checked = false);
+  currentPage = 1;
+  filteredResults = listings;
+  displayResults();
 });
 
-renderListings(listings);
+// Initialisation
+initDepartments();
+displayResults();

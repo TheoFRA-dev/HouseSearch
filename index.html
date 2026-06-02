@@ -1,119 +1,60 @@
 <!DOCTYPE html>
 <html lang="fr">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>HouseSearch — Trouvez la maison qui vous correspond</title>
-    <meta
-      name="description"
-      content="Comparez rapidement des annonces de maisons sur plusieurs plateformes de vente en ligne."
-    />
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
-      rel="stylesheet"
-    />
-    <link rel="stylesheet" href="styles.css" />
-  </head>
-  <body>
-    <header class="hero-card">
-      <nav class="topbar">
-        <div>
-          <p class="eyebrow">HouseSearch</p>
-          <h1>Comparez les maisons de plusieurs sites en un seul endroit.</h1>
-        </div>
-        <a class="ghost-btn" href="#filters">Lancer la recherche</a>
-      </nav>
-
-      <section class="hero-grid">
-        <article class="hero-copy">
-          <p class="kicker">Recherche intelligente • Critères personnalisés • Résultats rapides</p>
-          <p class="lede">
-            Filtrez les annonces selon le budget, la ville, le nombre de chambres, la surface
-            et le type de bien pour trouver la maison idéale en quelques clics.
-          </p>
-          <ul class="feature-list">
-            <li>Multi-sources : SeLoger, LeBonCoin, Bien’ici, Logic-Immo</li>
-            <li>Filtres avancés : budget, pièces, surface, type, localisation</li>
-            <li>Résultats triés par prix et pertinence</li>
-          </ul>
-        </article>
-
-        <aside class="hero-panel">
-          <h2>Les critères à saisir</h2>
-          <p>Budget max, ville, chambres, surface minimum et type de bien.</p>
-          <div class="mini-stat-grid">
-            <div class="mini-stat"><strong>120+</strong><span>annonces disponibles</span></div>
-            <div class="mini-stat"><strong>4</strong><span>plateformes comparées</span></div>
-            <div class="mini-stat"><strong>1</strong><span>recherche centralisée</span></div>
-          </div>
-        </aside>
-      </section>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Hairpoucepouce Immo</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="container">
+    <header class="header">
+      <h1 class="title">Hairpoucepouce Immo</h1>
     </header>
 
-    <main class="page-shell">
-      <section id="filters" class="card panel-card">
-        <div class="section-heading">
-          <div>
-            <p class="eyebrow">Filtres</p>
-            <h2>Affinez les résultats</h2>
+    <main class="main">
+      <aside class="sidebar">
+        <form id="searchForm" class="filters">
+          <div class="filter-group">
+            <label>Départements</label>
+            <div id="departmentsList" class="checkboxes"></div>
           </div>
-          <button id="resetBtn" class="ghost-btn" type="button">Réinitialiser</button>
-        </div>
 
-        <form id="searchForm" class="filters-grid">
-          <label>
-            Ville
-            <input id="cityInput" name="city" type="text" placeholder="Lyon, Nantes, Bordeaux..." />
-          </label>
-          <label>
-            Budget max (€)
-            <input id="maxBudget" name="maxBudget" type="number" min="0" step="10000" placeholder="300000" />
-          </label>
-          <label>
-            Chambres minimum
-            <input id="minBedrooms" name="minBedrooms" type="number" min="1" max="6" value="2" />
-          </label>
-          <label>
-            Surface minimum (m²)
-            <input id="minSurface" name="minSurface" type="number" min="20" step="5" placeholder="70" />
-          </label>
-          <label>
-            Type
-            <select id="propertyType" name="propertyType">
-              <option value="all">Tous</option>
-              <option value="Maison">Maison</option>
-              <option value="Appartement">Appartement</option>
-              <option value="Villa">Villa</option>
-            </select>
-          </label>
-          <label>
-            Source
-            <select id="sourceFilter" name="sourceFilter">
-              <option value="all">Toutes les plateformes</option>
-              <option value="SeLoger">SeLoger</option>
-              <option value="LeBonCoin">LeBonCoin</option>
-              <option value="Bien’ici">Bien’ici</option>
-              <option value="Logic-Immo">Logic-Immo</option>
-            </select>
-          </label>
-          <button class="primary-btn" type="submit">Rechercher</button>
+          <div class="filter-group">
+            <label>Prix (€)</label>
+            <div class="price-inputs">
+              <input id="minPrice" name="minPrice" type="number" placeholder="Min" />
+              <input id="maxPrice" name="maxPrice" type="number" placeholder="Max" />
+            </div>
+          </div>
+
+          <div class="filter-group">
+            <label>Localisation</label>
+            <input id="location" name="location" type="text" placeholder="Ex: Paris, Lyon..." />
+            <span class="help-text">Distance à partir de cet endroit</span>
+          </div>
+
+          <button class="btn-search" type="submit">Rechercher</button>
+          <button class="btn-reset" type="button" id="resetBtn">Réinitialiser</button>
         </form>
-      </section>
+      </aside>
 
-      <section class="card results-card">
-        <div class="section-heading">
-          <div>
-            <p class="eyebrow">Résultats</p>
-            <h2 id="resultTitle">Découvrez les maisons disponibles</h2>
-          </div>
-          <p id="resultCount" class="muted">0 bien(s) correspondant</p>
+      <section class="results-section">
+        <div class="results-header">
+          <h2 id="resultTitle">Résultats</h2>
+          <p id="resultCount">0 bien(s) trouvé(s)</p>
         </div>
+
         <div id="resultsGrid" class="results-grid"></div>
+
+        <div class="pagination" id="pagination"></div>
       </section>
     </main>
+  </div>
 
-    <script src="app.js"></script>
-  </body>
+  <script src="app.js"></script>
+</body>
 </html>
