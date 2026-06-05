@@ -1,5 +1,8 @@
-#!/bin/sh
+#!/bin/bash
 
-PORT=${PORT:-3000}
-echo "Starting server on port ${PORT}"
-exec python3 server.py
+set -e
+
+PORT=${PORT:-8080}
+echo "🚀 Démarrage du serveur HouseSearch sur le port ${PORT}..."
+exec python server.py
+

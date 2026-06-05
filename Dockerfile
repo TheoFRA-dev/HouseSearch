@@ -4,9 +4,11 @@ WORKDIR /app
 
 COPY . /app
 
-RUN chmod +x /app/start.sh
+# Installer les dépendances Python
+RUN pip install --no-cache-dir -r requirements.txt
 
-ENV PORT=3000
-EXPOSE 3000
+ENV PORT=8080
+EXPOSE 8080
 
-CMD ["/app/start.sh"]
+CMD ["python", "server.py"]
+

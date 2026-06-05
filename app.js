@@ -1,13 +1,125 @@
-// Données simples avec départements
+// Données enrichies avec les nouveaux critères
 const listings = [
-  { title: 'Maison à Lyon', price: 385000, dept: '69', city: 'Lyon', coords: { lat: 45.76, lng: 4.84 }, bedrooms: 4, surface: 120 },
-  { title: 'Appartement à Paris', price: 565000, dept: '75', city: 'Paris', coords: { lat: 48.86, lng: 2.35 }, bedrooms: 3, surface: 82 },
-  { title: 'Villa à Bordeaux', price: 520000, dept: '33', city: 'Bordeaux', coords: { lat: 44.84, lng: -0.58 }, bedrooms: 5, surface: 180 },
-  { title: 'Maison à Nantes', price: 310000, dept: '44', city: 'Nantes', coords: { lat: 47.22, lng: -1.55 }, bedrooms: 4, surface: 102 },
-  { title: 'Appartement à Marseille', price: 242000, dept: '13', city: 'Marseille', coords: { lat: 43.30, lng: 5.37 }, bedrooms: 2, surface: 68 },
-  { title: 'Maison à Toulouse', price: 348000, dept: '31', city: 'Toulouse', coords: { lat: 43.60, lng: 1.44 }, bedrooms: 3, surface: 96 },
-  { title: 'Maison à Nice', price: 450000, dept: '06', city: 'Nice', coords: { lat: 43.70, lng: 7.26 }, bedrooms: 3, surface: 110 },
-  { title: 'Appartement à Lyon (Presqu\'île)', price: 295000, dept: '69', city: 'Lyon', coords: { lat: 45.76, lng: 4.84 }, bedrooms: 2, surface: 75 },
+  { 
+    title: 'Maison à Lyon', 
+    price: 385000, 
+    dept: '69', 
+    city: 'Lyon', 
+    coords: { lat: 45.76, lng: 4.84 }, 
+    bedrooms: 4, 
+    surface: 120,
+    style: 'maison',
+    source: 'leboncoin',
+    population: 'large',
+    proximity: ['commerce', 'medecin', 'hopital'],
+    risks: [],
+    url: '#'
+  },
+  { 
+    title: 'Appartement à Paris', 
+    price: 565000, 
+    dept: '75', 
+    city: 'Paris', 
+    coords: { lat: 48.86, lng: 2.35 }, 
+    bedrooms: 3, 
+    surface: 82,
+    style: 'appartement',
+    source: 'seloger',
+    population: 'large',
+    proximity: ['commerce', 'medecin', 'hopital'],
+    risks: [],
+    url: '#'
+  },
+  { 
+    title: 'Villa à Bordeaux', 
+    price: 520000, 
+    dept: '33', 
+    city: 'Bordeaux', 
+    coords: { lat: 44.84, lng: -0.58 }, 
+    bedrooms: 5, 
+    surface: 180,
+    style: 'villa',
+    source: 'bienIci',
+    population: 'large',
+    proximity: ['commerce', 'medecin'],
+    risks: ['feu'],
+    url: '#'
+  },
+  { 
+    title: 'Maison à Nantes', 
+    price: 310000, 
+    dept: '44', 
+    city: 'Nantes', 
+    coords: { lat: 47.22, lng: -1.55 }, 
+    bedrooms: 4, 
+    surface: 102,
+    style: 'maison',
+    source: 'leboncoin',
+    population: 'large',
+    proximity: ['commerce', 'medecin'],
+    risks: [],
+    url: '#'
+  },
+  { 
+    title: 'Appartement à Marseille', 
+    price: 242000, 
+    dept: '13', 
+    city: 'Marseille', 
+    coords: { lat: 43.30, lng: 5.37 }, 
+    bedrooms: 2, 
+    surface: 68,
+    style: 'appartement',
+    source: 'seloger',
+    population: 'large',
+    proximity: ['commerce', 'hopital'],
+    risks: [],
+    url: '#'
+  },
+  { 
+    title: 'Maison à Toulouse', 
+    price: 348000, 
+    dept: '31', 
+    city: 'Toulouse', 
+    coords: { lat: 43.60, lng: 1.44 }, 
+    bedrooms: 3, 
+    surface: 96,
+    style: 'maison',
+    source: 'immo',
+    population: 'large',
+    proximity: ['commerce', 'medecin', 'hopital'],
+    risks: ['argile'],
+    url: '#'
+  },
+  { 
+    title: 'Maison à Nice', 
+    price: 450000, 
+    dept: '06', 
+    city: 'Nice', 
+    coords: { lat: 43.70, lng: 7.26 }, 
+    bedrooms: 3, 
+    surface: 110,
+    style: 'villa',
+    source: 'bienIci',
+    population: 'large',
+    proximity: ['commerce'],
+    risks: ['feu'],
+    url: '#'
+  },
+  { 
+    title: 'Loft à Lyon (Presqu\'île)', 
+    price: 295000, 
+    dept: '69', 
+    city: 'Lyon', 
+    coords: { lat: 45.76, lng: 4.84 }, 
+    bedrooms: 2, 
+    surface: 75,
+    style: 'loft',
+    source: 'leboncoin',
+    population: 'large',
+    proximity: ['commerce', 'medecin'],
+    risks: [],
+    url: '#'
+  },
 ];
 
 // Départements disponibles
@@ -21,7 +133,7 @@ const departments = [
   { code: '06', name: 'Alpes-Maritimes (06)' },
 ];
 
-// Coordonnées approximatives pour localisation
+// Coordonnées pour localisation
 const cityCoords = {
   'Paris': { lat: 48.86, lng: 2.35 },
   'Lyon': { lat: 45.76, lng: 4.84 },
@@ -36,7 +148,7 @@ const ITEMS_PER_PAGE = 9;
 let currentPage = 1;
 let filteredResults = [];
 
-// Distance calculée en km
+// Calcul de distance
 function calculateDistance(lat1, lng1, lat2, lng2) {
   const R = 6371;
   const dLat = (lat2 - lat1) * Math.PI / 180;
@@ -46,7 +158,7 @@ function calculateDistance(lat1, lng1, lat2, lng2) {
   return R * c;
 }
 
-// Initialiser les checkboxes des départements
+// Initialiser les départements
 function initDepartments() {
   const container = document.getElementById('departmentsList');
   departments.forEach(dept => {
@@ -63,33 +175,60 @@ function initDepartments() {
 // Filtrer les résultats
 function filterListings() {
   const selectedDepts = Array.from(document.querySelectorAll('input[name="dept"]:checked')).map(e => e.value);
+  const selectedStyles = Array.from(document.querySelectorAll('input[name="houseStyle"]:checked')).map(e => e.value);
+  const selectedProximity = Array.from(document.querySelectorAll('input[name="proximity"]:checked')).map(e => e.value);
+  const selectedRisks = Array.from(document.querySelectorAll('input[name="risks"]:checked')).map(e => e.value);
+  const selectedSources = Array.from(document.querySelectorAll('input[name="source"]:checked')).map(e => e.value);
+  
   const minPrice = parseInt(document.getElementById('minPrice').value) || 0;
   const maxPrice = parseInt(document.getElementById('maxPrice').value) || Infinity;
+  const minSurface = parseInt(document.getElementById('minSurface').value) || 0;
+  const maxSurface = parseInt(document.getElementById('maxSurface').value) || Infinity;
+  const bedrooms = document.getElementById('bedrooms').value;
   const location = document.getElementById('location').value.trim();
+  const population = document.getElementById('population').value;
 
   filteredResults = listings.filter(item => {
     const matchDept = selectedDepts.length === 0 || selectedDepts.includes(item.dept);
     const matchPrice = item.price >= minPrice && item.price <= maxPrice;
-    
+    const matchSurface = item.surface >= minSurface && item.surface <= maxSurface;
+    const matchBedrooms = !bedrooms || (bedrooms === '5' ? item.bedrooms >= 5 : item.bedrooms == bedrooms);
+    const matchStyle = selectedStyles.length === 0 || selectedStyles.includes(item.style);
+    const matchSource = selectedSources.length === 0 || selectedSources.includes(item.source);
+    const matchPopulation = !population || item.population === population;
+
+    // Filtrer par proximité (au moins un des critères sélectionnés doit être présent)
+    let matchProximity = true;
+    if (selectedProximity.length > 0) {
+      matchProximity = selectedProximity.some(prox => item.proximity.includes(prox));
+    }
+
+    // Filtrer par risques (exclure les biens avec les risques sélectionnés)
+    let matchRisks = true;
+    if (selectedRisks.length > 0) {
+      matchRisks = !selectedRisks.some(risk => item.risks.includes(risk));
+    }
+
     let matchLocation = true;
     if (location) {
       const refCoords = cityCoords[location] || null;
       if (refCoords) {
         const dist = calculateDistance(refCoords.lat, refCoords.lng, item.coords.lat, item.coords.lng);
-        matchLocation = dist <= 100; // Dans un rayon de 100km
+        matchLocation = dist <= 100;
       } else {
         matchLocation = item.city.toLowerCase().includes(location.toLowerCase());
       }
     }
 
-    return matchDept && matchPrice && matchLocation;
+    return matchDept && matchPrice && matchSurface && matchBedrooms && matchStyle && matchSource && 
+           matchPopulation && matchProximity && matchRisks && matchLocation;
   });
 
   currentPage = 1;
   displayResults();
 }
 
-// Afficher les résultats avec pagination
+// Afficher les résultats
 function displayResults() {
   const grid = document.getElementById('resultsGrid');
   const countEl = document.getElementById('resultCount');
@@ -99,7 +238,7 @@ function displayResults() {
   titleEl.textContent = filteredResults.length > 0 ? 'Résultats' : 'Aucun résultat';
 
   if (filteredResults.length === 0) {
-    grid.innerHTML = '<div class="empty-state"><p>Aucun bien ne correspond à vos critères.</p></div>';
+    grid.innerHTML = '<div class="empty-state"><i class="fas fa-search"></i><p>Aucun bien ne correspond à vos critères.</p></div>';
     document.getElementById('pagination').innerHTML = '';
     return;
   }
@@ -108,21 +247,62 @@ function displayResults() {
   const endIdx = startIdx + ITEMS_PER_PAGE;
   const pageItems = filteredResults.slice(startIdx, endIdx);
 
-  grid.innerHTML = pageItems.map(item => `
-    <div class="card-property">
-      <div class="card-image">🏠</div>
-      <div class="card-body">
-        <div class="card-title">${item.title}</div>
-        <div class="card-price">${item.price.toLocaleString('fr-FR')} €</div>
-        <div class="card-tags">
-          <span class="tag">${item.bedrooms} ch.</span>
-          <span class="tag">${item.surface} m²</span>
-          <span class="tag">Dept ${item.dept}</span>
+  grid.innerHTML = pageItems.map(item => {
+    const proximityTags = item.proximity.map(p => {
+      const labels = { 'commerce': '🛍️ Commerce', 'medecin': '👨‍⚕️ Médecin', 'hopital': '🏥 Hôpital' };
+      return `<span class="tag proximity">${labels[p]}</span>`;
+    }).join('');
+
+    const riskTags = item.risks.map(r => {
+      const labels = { 'argile': '⚠️ Retrait d\'argile', 'feu': '🔥 Zone incendie' };
+      return `<span class="tag risk">${labels[r]}</span>`;
+    }).join('');
+
+    const sourceLabels = {
+      'leboncoin': 'Leboncoin',
+      'seloger': 'SeLoger',
+      'bienIci': 'Bien ici',
+      'immo': 'Immobilier.com'
+    };
+
+    return `
+      <div class="card-property">
+        <div class="card-image">
+          ${item.style === 'maison' ? '🏠' : item.style === 'appartement' ? '🏢' : item.style === 'villa' ? '🏰' : '🏗️'}
+          <span class="card-source">${sourceLabels[item.source]}</span>
         </div>
-        <div class="card-location">${item.city}</div>
+        <div class="card-body">
+          <div class="card-title">${item.title}</div>
+          <div class="card-price">${item.price.toLocaleString('fr-FR')} €</div>
+          <div class="card-tags">
+            ${proximityTags}
+            ${riskTags}
+          </div>
+          <div class="card-details">
+            <div class="card-detail">
+              <i class="fas fa-bed"></i>
+              <span>${item.bedrooms} chambre(s)</span>
+            </div>
+            <div class="card-detail">
+              <i class="fas fa-ruler-combined"></i>
+              <span>${item.surface} m²</span>
+            </div>
+            <div class="card-detail">
+              <i class="fas fa-building"></i>
+              <span>${item.style}</span>
+            </div>
+            <div class="card-detail">
+              <i class="fas fa-users"></i>
+              <span>${item.population}</span>
+            </div>
+          </div>
+          <div class="card-location">
+            <i class="fas fa-map-pin"></i> ${item.city} (${item.dept})
+          </div>
+        </div>
       </div>
-    </div>
-  `).join('');
+    `;
+  }).join('');
 
   renderPagination();
 }
@@ -139,7 +319,7 @@ function renderPagination() {
 
   let html = '';
   if (currentPage > 1) {
-    html += `<button onclick="goToPage(${currentPage - 1})">← Précédent</button>`;
+    html += `<button onclick="goToPage(${currentPage - 1})"><i class="fas fa-chevron-left"></i> Précédent</button>`;
   }
 
   for (let i = 1; i <= totalPages; i++) {
@@ -151,7 +331,7 @@ function renderPagination() {
   }
 
   if (currentPage < totalPages) {
-    html += `<button onclick="goToPage(${currentPage + 1})">Suivant →</button>`;
+    html += `<button onclick="goToPage(${currentPage + 1})">Suivant <i class="fas fa-chevron-right"></i></button>`;
   }
 
   paginationEl.innerHTML = html;
@@ -171,7 +351,7 @@ document.getElementById('searchForm').addEventListener('submit', (e) => {
 
 document.getElementById('resetBtn').addEventListener('click', () => {
   document.getElementById('searchForm').reset();
-  Array.from(document.querySelectorAll('input[name="dept"]')).forEach(e => e.checked = false);
+  Array.from(document.querySelectorAll('input[type="checkbox"]')).forEach(e => e.checked = e.name === 'source');
   currentPage = 1;
   filteredResults = listings;
   displayResults();
@@ -179,4 +359,5 @@ document.getElementById('resetBtn').addEventListener('click', () => {
 
 // Initialisation
 initDepartments();
+filteredResults = [...listings]; // Initialiser avec toutes les annonces
 displayResults();

@@ -3,56 +3,197 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Hairpoucepouce Immo</title>
+  <title>HouseSearch - Recherche Immobilière</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
-  <div class="container">
+  <div class="page-wrapper">
     <header class="header">
-      <h1 class="title">Hairpoucepouce Immo</h1>
+      <div class="header-content">
+        <div class="logo-section">
+          <i class="fas fa-home"></i>
+          <h1 class="title">HouseSearch</h1>
+          <p class="subtitle">Trouvez la maison de vos rêves</p>
+        </div>
+      </div>
     </header>
 
-    <main class="main">
-      <aside class="sidebar">
-        <form id="searchForm" class="filters">
-          <div class="filter-group">
-            <label>Départements</label>
-            <div id="departmentsList" class="checkboxes"></div>
-          </div>
+    <main class="main-container">
+      <div class="container">
+        <aside class="sidebar">
+          <form id="searchForm" class="filters">
+            <div class="filter-header">
+              <h3><i class="fas fa-sliders-h"></i> Filtres</h3>
+            </div>
 
-          <div class="filter-group">
-            <label>Prix (€)</label>
-            <div class="price-inputs">
-              <input id="minPrice" name="minPrice" type="number" placeholder="Min" />
-              <input id="maxPrice" name="maxPrice" type="number" placeholder="Max" />
+            <!-- Prix -->
+            <div class="filter-group">
+              <label class="filter-label"><i class="fas fa-euro-sign"></i> Budget (€)</label>
+              <div class="price-inputs">
+                <input id="minPrice" name="minPrice" type="number" placeholder="Min" />
+                <input id="maxPrice" name="maxPrice" type="number" placeholder="Max" />
+              </div>
+            </div>
+
+            <!-- Localisation -->
+            <div class="filter-group">
+              <label class="filter-label"><i class="fas fa-map-marker-alt"></i> Localisation</label>
+              <input id="location" name="location" type="text" placeholder="Ville, région..." />
+              <span class="help-text">Rayon: 100 km</span>
+            </div>
+
+            <!-- Départements -->
+            <div class="filter-group">
+              <label class="filter-label"><i class="fas fa-map-pin"></i> Départements</label>
+              <div id="departmentsList" class="checkboxes"></div>
+            </div>
+
+            <!-- Surface -->
+            <div class="filter-group">
+              <label class="filter-label"><i class="fas fa-ruler-combined"></i> Surface (m²)</label>
+              <div class="price-inputs">
+                <input id="minSurface" name="minSurface" type="number" placeholder="Min" />
+                <input id="maxSurface" name="maxSurface" type="number" placeholder="Max" />
+              </div>
+            </div>
+
+            <!-- Chambres -->
+            <div class="filter-group">
+              <label class="filter-label"><i class="fas fa-bed"></i> Chambres</label>
+              <select id="bedrooms" name="bedrooms" class="select-input">
+                <option value="">Indifférent</option>
+                <option value="1">1 chambre</option>
+                <option value="2">2 chambres</option>
+                <option value="3">3 chambres</option>
+                <option value="4">4 chambres</option>
+                <option value="5">5+ chambres</option>
+              </select>
+            </div>
+
+            <!-- Style de maison -->
+            <div class="filter-group">
+              <label class="filter-label"><i class="fas fa-building"></i> Style de maison</label>
+              <div class="checkboxes">
+                <div class="checkbox-item">
+                  <input type="checkbox" name="houseStyle" value="maison" id="style-maison" />
+                  <label for="style-maison">Maison</label>
+                </div>
+                <div class="checkbox-item">
+                  <input type="checkbox" name="houseStyle" value="appartement" id="style-apt" />
+                  <label for="style-apt">Appartement</label>
+                </div>
+                <div class="checkbox-item">
+                  <input type="checkbox" name="houseStyle" value="villa" id="style-villa" />
+                  <label for="style-villa">Villa</label>
+                </div>
+                <div class="checkbox-item">
+                  <input type="checkbox" name="houseStyle" value="loft" id="style-loft" />
+                  <label for="style-loft">Loft</label>
+                </div>
+              </div>
+            </div>
+
+            <!-- Critères de proximité -->
+            <div class="filter-group">
+              <label class="filter-label"><i class="fas fa-map-marked-alt"></i> Proximités</label>
+              <div class="checkboxes">
+                <div class="checkbox-item">
+                  <input type="checkbox" name="proximity" value="commerce" id="prox-commerce" />
+                  <label for="prox-commerce">Commerce proche</label>
+                </div>
+                <div class="checkbox-item">
+                  <input type="checkbox" name="proximity" value="medecin" id="prox-medecin" />
+                  <label for="prox-medecin">Médecin</label>
+                </div>
+                <div class="checkbox-item">
+                  <input type="checkbox" name="proximity" value="hopital" id="prox-hopital" />
+                  <label for="prox-hopital">Hôpital</label>
+                </div>
+              </div>
+            </div>
+
+            <!-- Critères de risques -->
+            <div class="filter-group">
+              <label class="filter-label"><i class="fas fa-exclamation-triangle"></i> Risques</label>
+              <div class="checkboxes">
+                <div class="checkbox-item">
+                  <input type="checkbox" name="risks" value="argile" id="risk-argile" />
+                  <label for="risk-argile">Retrait d'argile</label>
+                </div>
+                <div class="checkbox-item">
+                  <input type="checkbox" name="risks" value="feu" id="risk-feu" />
+                  <label for="risk-feu">Zones à risque incendie</label>
+                </div>
+              </div>
+            </div>
+
+            <!-- Population -->
+            <div class="filter-group">
+              <label class="filter-label"><i class="fas fa-users"></i> Population</label>
+              <select id="population" name="population" class="select-input">
+                <option value="">Indifférent</option>
+                <option value="rural">Rural (< 2000 habitants)</option>
+                <option value="small">Petit village (2000-5000)</option>
+                <option value="medium">Ville moyenne (5000-50000)</option>
+                <option value="large">Grande ville (> 50000)</option>
+              </select>
+            </div>
+
+            <!-- Sources -->
+            <div class="filter-group">
+              <label class="filter-label"><i class="fas fa-globe"></i> Sources</label>
+              <div class="checkboxes">
+                <div class="checkbox-item">
+                  <input type="checkbox" name="source" value="leboncoin" id="src-leboncoin" checked />
+                  <label for="src-leboncoin">Leboncoin</label>
+                </div>
+                <div class="checkbox-item">
+                  <input type="checkbox" name="source" value="seloger" id="src-seloger" checked />
+                  <label for="src-seloger">SeLoger</label>
+                </div>
+                <div class="checkbox-item">
+                  <input type="checkbox" name="source" value="bienIci" id="src-bienici" checked />
+                  <label for="src-bienici">Bien ici</label>
+                </div>
+                <div class="checkbox-item">
+                  <input type="checkbox" name="source" value="immo" id="src-immo" checked />
+                  <label for="src-immo">Immobilier.com</label>
+                </div>
+              </div>
+            </div>
+
+            <div class="filter-buttons">
+              <button class="btn-search" type="submit"><i class="fas fa-search"></i> Rechercher</button>
+              <button class="btn-reset" type="button" id="resetBtn"><i class="fas fa-redo"></i> Réinitialiser</button>
+            </div>
+          </form>
+        </aside>
+
+        <section class="results-section">
+          <div class="results-header">
+            <div class="results-title">
+              <h2 id="resultTitle">Résultats</h2>
+              <p id="resultCount" class="result-count">0 bien(s) trouvé(s)</p>
+            </div>
+            <div id="loadingSpinner" class="loading-spinner" style="display: none;">
+              <i class="fas fa-spinner fa-spin"></i> Chargement...
             </div>
           </div>
 
-          <div class="filter-group">
-            <label>Localisation</label>
-            <input id="location" name="location" type="text" placeholder="Ex: Paris, Lyon..." />
-            <span class="help-text">Distance à partir de cet endroit</span>
-          </div>
+          <div id="resultsGrid" class="results-grid"></div>
 
-          <button class="btn-search" type="submit">Rechercher</button>
-          <button class="btn-reset" type="button" id="resetBtn">Réinitialiser</button>
-        </form>
-      </aside>
-
-      <section class="results-section">
-        <div class="results-header">
-          <h2 id="resultTitle">Résultats</h2>
-          <p id="resultCount">0 bien(s) trouvé(s)</p>
-        </div>
-
-        <div id="resultsGrid" class="results-grid"></div>
-
-        <div class="pagination" id="pagination"></div>
-      </section>
+          <div class="pagination" id="pagination"></div>
+        </section>
+      </div>
     </main>
+
+    <footer class="footer">
+      <p>&copy; 2024 HouseSearch. Tous droits réservés.</p>
+    </footer>
   </div>
 
   <script src="app.js"></script>
