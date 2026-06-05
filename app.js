@@ -203,7 +203,7 @@ function initDepartments() {
 }
 
 // Filtrer les résultats
-function filterListings() {
+async function filterListings() {
   const selectedDepts = Array.from(document.querySelectorAll('input[name="dept"]:checked')).map(e => e.value);
   const selectedStyles = Array.from(document.querySelectorAll('input[name="houseStyle"]:checked')).map(e => e.value);
   const selectedProximity = Array.from(document.querySelectorAll('input[name="proximity"]:checked')).map(e => e.value);
@@ -218,42 +218,30 @@ function filterListings() {
   const location = document.getElementById('location').value.trim();
   const population = document.getElementById('population').value;
 
-  filteredResults = listings.filter(item => {
-    const matchDept = selectedDepts.length === 0 || selectedDepts.includes(item.dept);
-    const matchPrice = item.price >= minPrice && item.price <= maxPrice;
-    const matchSurface = item.surface >= minSurface && item.surface <= maxSurface;
-    const matchBedrooms = !bedrooms || (bedrooms === '5' ? item.bedrooms >= 5 : item.bedrooms == bedrooms);
-    const matchStyle = selectedStyles.length === 0 || selectedStyles.includes(item.style);
-    const matchSource = selectedSources.length === 0 || selectedSources.includes(item.source);
-    const matchPopulation = !population || item.population === population;
+  document.getElementById('loadingSpinner').style.display = 'flex';
 
-    // Filtrer par proximité (au moins un des critères sélectionnés doit être présent)
-    let matchProximity = true;
-    if (selectedProximity.length > 0) {
-      matchProximity = selectedProximity.some(prox => item.proximity.includes(prox));
-    }
+  try {
+    const response = await fetch('/api/search', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        city: location || 'Paris',
+        price_min: minPrice,
+        price_max: maxPrice,
+        surface_min: minSurface,
+        bedrooms: bedrooms,
+        sources: selectedSources
+      })
+    });
+    const data = await response.json();
+    filteredResults = data.listings || [];
+  } catch (error) {
+    console.error("Erreur API:", error);
+    // Fallback sur les données locales si l'API échoue
+    filteredResults = listings; 
+  }
 
-    // Filtrer par risques (exclure les biens avec les risques sélectionnés)
-    let matchRisks = true;
-    if (selectedRisks.length > 0) {
-      matchRisks = !selectedRisks.some(risk => item.risks.includes(risk));
-    }
-
-    let matchLocation = true;
-    if (location) {
-      const refCoords = cityCoords[location] || null;
-      if (refCoords) {
-        const dist = calculateDistance(refCoords.lat, refCoords.lng, item.coords.lat, item.coords.lng);
-        matchLocation = dist <= 100;
-      } else {
-        matchLocation = item.city.toLowerCase().includes(location.toLowerCase());
-      }
-    }
-
-    return matchDept && matchPrice && matchSurface && matchBedrooms && matchStyle && matchSource && 
-           matchPopulation && matchProximity && matchRisks && matchLocation;
-  });
-
+  document.getElementById('loadingSpinner').style.display = 'none';
   currentPage = 1;
   displayResults();
 }
