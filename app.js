@@ -13,7 +13,7 @@ const listings = [
     population: 'large',
     proximity: ['commerce', 'medecin', 'hopital'],
     risks: [],
-    url: '#'
+    url: 'https://www.leboncoin.fr/recherche?category=9'
   },
   { 
     title: 'Appartement à Paris', 
@@ -28,7 +28,7 @@ const listings = [
     population: 'large',
     proximity: ['commerce', 'medecin', 'hopital'],
     risks: [],
-    url: '#'
+    url: 'https://www.seloger.com'
   },
   { 
     title: 'Villa à Bordeaux', 
@@ -43,7 +43,7 @@ const listings = [
     population: 'large',
     proximity: ['commerce', 'medecin'],
     risks: ['feu'],
-    url: '#'
+    url: 'https://www.bienici.com'
   },
   { 
     title: 'Maison à Nantes', 
@@ -58,7 +58,7 @@ const listings = [
     population: 'large',
     proximity: ['commerce', 'medecin'],
     risks: [],
-    url: '#'
+    url: 'https://www.leboncoin.fr'
   },
   { 
     title: 'Appartement à Marseille', 
@@ -73,7 +73,7 @@ const listings = [
     population: 'large',
     proximity: ['commerce', 'hopital'],
     risks: [],
-    url: '#'
+    url: 'https://www.seloger.com'
   },
   { 
     title: 'Maison à Toulouse', 
@@ -88,7 +88,7 @@ const listings = [
     population: 'large',
     proximity: ['commerce', 'medecin', 'hopital'],
     risks: ['argile'],
-    url: '#'
+    url: 'https://www.immobilier.com'
   },
   { 
     title: 'Maison à Nice', 
@@ -103,7 +103,7 @@ const listings = [
     population: 'large',
     proximity: ['commerce'],
     risks: ['feu'],
-    url: '#'
+    url: 'https://www.bienici.com'
   },
   { 
     title: 'Loft à Lyon (Presqu\'île)', 
@@ -118,8 +118,38 @@ const listings = [
     population: 'large',
     proximity: ['commerce', 'medecin'],
     risks: [],
-    url: '#'
+    url: 'https://www.leboncoin.fr'
   },
+  { 
+    title: 'Maison de village à Sarlat', 
+    price: 185000, 
+    dept: '24', 
+    city: 'Sarlat', 
+    coords: { lat: 44.88, lng: 1.21 }, 
+    bedrooms: 2, 
+    surface: 85,
+    style: 'maison',
+    source: 'immo',
+    population: 'small',
+    proximity: ['commerce'],
+    risks: [],
+    url: 'https://www.immobilier.com'
+  },
+  { 
+    title: 'Terrain constructible à Rennes', 
+    price: 120000, 
+    dept: '35', 
+    city: 'Rennes', 
+    coords: { lat: 48.11, lng: -1.67 }, 
+    bedrooms: 0, 
+    surface: 500,
+    style: 'terrain',
+    source: 'leboncoin',
+    population: 'medium',
+    proximity: ['ecole', 'transport'],
+    risks: [],
+    url: 'https://www.leboncoin.fr'
+  }
 ];
 
 // Départements disponibles
@@ -266,7 +296,8 @@ function displayResults() {
     };
 
     return `
-      <div class="card-property">
+      <a href="${item.url}" target="_blank" class="card-link">
+        <div class="card-property">
         <div class="card-image">
           ${item.style === 'maison' ? '🏠' : item.style === 'appartement' ? '🏢' : item.style === 'villa' ? '🏰' : '🏗️'}
           <span class="card-source">${sourceLabels[item.source]}</span>
@@ -301,6 +332,7 @@ function displayResults() {
           </div>
         </div>
       </div>
+      </a>
     `;
   }).join('');
 
